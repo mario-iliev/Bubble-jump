@@ -66,7 +66,6 @@ $(function() {
 
 				if (!gameStarted && !forceJump) {
 					gameStarted = true;
-					console.log('Game started');
 
 					$('.start').addClass('fade_out');
 
