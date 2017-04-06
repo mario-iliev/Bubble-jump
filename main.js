@@ -30,7 +30,7 @@ $(function() {
 		currentWidthSize = width;
 		currentHeightSize = height;
 
-		$('.bubble_holder').css({'width': width + '%', 'height': height + '%'});
+		$('.bubble_holder').css({'width': currentWidthSize + '%', 'height': currentHeightSize + '%'});
 
 		if (typeof callback == 'function') {
 			callback();
