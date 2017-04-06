@@ -34,8 +34,6 @@ $(function() {
 
 		bubbleHolder.css({'width': currentWidthSize + '%', 'height': currentHeightSize + '%'});
 
-		console.log(typeof callback);
-
 		if (typeof callback == 'function') {
 			callback();
 		}
