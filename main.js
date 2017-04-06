@@ -2,6 +2,7 @@ $(function() {
 	var gameStarted = false;
 	var inAir = false;
 	var mouthOpened = false;
+	var forceJump = true;
 	var initialWidthSize = 10000 / $(window).width();
 	var initialHeightSize = 10000 / $(window).height();
 	var currentWidthSize = initialWidthSize;
@@ -39,7 +40,7 @@ $(function() {
 		}
 	};
 
-	function enableBubbleJump(forceJump) {
+	function enableBubbleJump() {
 		var key;
 
 		function jump() {
@@ -65,6 +66,7 @@ $(function() {
 
 				if (!gameStarted && !forceJump) {
 					gameStarted = true;
+					console.log('Game started');
 
 					$('.start').addClass('fade_out');
 
@@ -77,6 +79,7 @@ $(function() {
 
 		if (forceJump) {
 			jump();
+			forceJump = false;
 		}
 
 		$(document).on('keypress.jump', function(e) {
@@ -138,5 +141,5 @@ $(function() {
 		});
 	});
 
-	enableBubbleJump(true);
+	enableBubbleJump();
 });
