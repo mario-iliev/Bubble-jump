@@ -7,6 +7,8 @@ $(function() {
 	var currentWidthSize = initialWidthSize;
 	var currentHeightSize = initialHeightSize;
 	var cake = $('.cake');
+	var bubbleWrap = $('.bubble_wrap');
+	var bubbleHolder = $('.bubble_holder');
 	var transitionEnd = (function(){
 		var i;
 		var el = document.createElement('el');
@@ -30,30 +32,20 @@ $(function() {
 		currentWidthSize = width;
 		currentHeightSize = height;
 
-		$('.bubble_holder').css({'width': currentWidthSize + '%', 'height': currentHeightSize + '%'});
+		bubbleHolder.css({'width': currentWidthSize + '%', 'height': currentHeightSize + '%'});
+
+		console.log(typeof callback);
 
 		if (typeof callback == 'function') {
 			callback();
 		}
 	};
 
-	function enableBubbleJump() {
-		$(document).on('keypress.jump', function(e) {
-			var key = e.which || e.keyCode || e.charCode;
+	function enableBubbleJump(forceJump) {
+		var key;
 
-			if (!gameStarted) {
-				gameStarted = true;
-
-				$('.start').addClass('fade_out');
-
-				setTimeout(function() {
-					releaseCake();
-				}, 1500);
-
-				return;
-			}
-
-			if (key == 32 && !inAir) {
+		function jump() {
+			if (key == 32 && !inAir || forceJump) {
 				inAir = true;
 
 				$('.wrap').removeClass('bouncy').addClass('jump');
@@ -66,18 +58,40 @@ $(function() {
 					}, 400);
 				}, 50);
 
-				$('.bubble_wrap').on(transitionEnd, function() {
+				bubbleWrap.on(transitionEnd, function() {
 					inAir = false;
+
+					bubbleWrap.off(transitionEnd);
 					$('.wrap').removeClass('jump').addClass('bouncy');
 				});
+
+				if (!gameStarted && !forceJump) {
+					gameStarted = true;
+
+					$('.start').addClass('fade_out');
+
+					setTimeout(function() {
+						releaseCake();
+					}, 1500);
+				}
 			}
+		};
+
+		if (forceJump) {
+			jump();
+		}
+
+		$(document).on('keypress.jump', function(e) {
+			key = e.which || e.keyCode || e.charCode;
+
+			jump();
 		});
 	};
 
 	function releaseCake() {
 		var rightDistance = 50 - (currentWidthSize / 2);
-		var topPosition = $('.bubble_holder').offset().top;
-		var cakeSize = $('.bubble_wrap').width() / 2.5;
+		var topPosition = bubbleHolder.offset().top;
+		var cakeSize = bubbleWrap.width() / 2.5;
 
 		var style = {
 			'margin-top': topPosition + 'px',
@@ -116,11 +130,15 @@ $(function() {
 		});
 	};
 
-	$('.wrap').addClass('fade_in');
-
 	$('.restart').on('click', function() {
 		location.reload();
 	});
 
-	enableBubbleJump();
+	changeBubbleSize(currentWidthSize, currentHeightSize, function() {
+		bubbleHolder.on(transitionEnd, function() {
+			$('.wrap').addClass('bouncy fade_in');
+		});
+	});
+
+	enableBubbleJump(true);
 });
