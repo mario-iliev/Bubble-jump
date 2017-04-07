@@ -191,6 +191,7 @@ div {
 	top: 50%;
 	right: -100px;
 	margin: 0 -35px 0 0;
+	z-index: 3;
 }
 .cake .cone_left {
 	position: absolute;
@@ -321,10 +322,19 @@ div {
 .cake.transition {
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
-	-webkit-transition: right 2s linear;
-	-moz-transition: right 2s linear;
-	-o-transition: right 2s linear;
-	transition: right 2s linear;
+	-webkit-transition: transform 2s linear;
+	-moz-transition: transform 2s linear;
+	-o-transition: transform 2s linear;
+	transition: transform 2s linear;
+}
+
+.cake.cake_eated {
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-transition: transform 0.3s linear, scale 0.3s linear, opacity 0.3s linear;
+	-moz-transition: transform 0.3s linear, scale 0.3s linear, opacity 0.3s linear;
+	-o-transition: transform 0.3s linear, scale 0.3s linear, opacity 0.3s linear;
+	transition: transform 0.3s linear, scale 0.3s linear, opacity 0.3s linear;
 }
 
 .bubble_happy {
@@ -424,13 +434,6 @@ div {
 	-webkit-animation: mouthJump 1.2s alternate;
 	-moz-animation: mouthJump 1.2s alternate;
 	animation: mouthJump 1.2s alternate;
-}
-
-.cake.eated {
-	z-index: 3;
-	-webkit-animation: cakeEated 0.3s ease-in-out;
-	-moz-animation: cakeEated 0.3s ease-in-out;
-	animation: cakeEated 0.3s ease-in-out;
 }
 
 /* Entire body wiggle/bounce */
@@ -659,25 +662,4 @@ div {
 	25%  { transform: scale(0.6); opacity: 0.5; }
 	70%  { transform: scale(1); opacity: 1; }
 	100% { transform: scale(0.9); opacity: 0.7; }
-}
-
-/* Animate the cake when it's eated */
-@-webkit-keyframes cakeEated {
-	0%   { -webkit-transform: scale(1) translate(0%); -webkit-opacity: 1; }
-	100% { -webkit-transform: scale(0) translate(-500%, -100%); -webkit-opacity: 0; }
-}
-
-@-moz-keyframes cakeEated {
-	0%   { -moz-transform: scale(1) translate(0%); -moz-opacity: 1; }
-	100% { -moz-transform: scale(0) translate(-500%, -100%); -moz-opacity: 0; }
-}
-
-@-o-keyframes cakeEated {
-	0%   { -o-transform: scale(1) translate(0%); -o-opacity: 1; }
-	100% { -o-transform: scale(0) translate(-500%, -100%); -o-opacity: 0; }
-}
-
-@keyframes cakeEated {
-	0%   { transform: scale(1) translate(0%); opacity: 1; }
-	100% { transform: scale(0) translate(-500%, -100%); opacity: 0; }
 }

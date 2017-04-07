@@ -3,8 +3,10 @@ $(function() {
 	var inAir = false;
 	var mouthOpened = false;
 	var forceJump = true;
-	var initialWidthSize = 10000 / $(window).width();
-	var initialHeightSize = 10000 / $(window).height();
+	var win = $(window);
+	var windowWidth = win.width();
+	var initialWidthSize = 10000 / win.width();
+	var initialHeightSize = 10000 / win.height();
 	var currentWidthSize = initialWidthSize;
 	var currentHeightSize = initialHeightSize;
 	var cake = $('.cake');
@@ -89,25 +91,35 @@ $(function() {
 	};
 
 	function releaseCake() {
-		var rightDistance = 50 - (currentWidthSize / 2);
+		var rightDistance = bubbleHolder.offset().left;
 		var topPosition = bubbleHolder.offset().top;
-		var cakeSize = bubbleWrap.width() / 2.5;
+		var bubbleSize = bubbleWrap.width();
+		var cakeSize = bubbleSize / 2.5;
 
 		var style = {
+			'z-index': 3,
 			'margin-top': topPosition + 'px',
 			'margin-right': -cakeSize,
 			'top' : (currentHeightSize / 25) + '%',
-			'right': rightDistance + '%',
+			'right': 0,
 			'width': cakeSize,
-			'height': cakeSize
+			'height': cakeSize,
+			'transform': 'translate(-' + rightDistance + 'px, 0px)'
 		};
 
 		cake.addClass('transition').css(style).on(transitionEnd, function() {
 			cake.off(transitionEnd);
 
 			if (mouthOpened) {
-				cake.removeClass('transition').addClass('eated').on(transitionEnd, function() {
-					cake.off(transitionEnd).removeClass('eated').css({'right': 0 + '%'});
+				var translateValue = (rightDistance + (bubbleSize / 2) ) + 'px, -' + (bubbleSize / 7);
+				var style = {
+					'opacity': 0,
+					'transform': 'translate(-' + translateValue + 'px) scale(0.01)'
+				};
+
+				cake.removeClass('transition').addClass('cake_eated').css(style).on(transitionEnd, function() {
+					cake.off(transitionEnd).removeClass('cake_eated').css({'right': -cakeSize, 'transform': 'translate(0px) scale(1)', 'opacity': 1});
+
 					changeBubbleSize((currentWidthSize * 1.10), (currentHeightSize * 1.10));
 
 					if (currentHeightSize * 1.10 > 79) {
@@ -119,8 +131,13 @@ $(function() {
 					}
 				});
 			} else {
-				cake.css({'right': 110 + '%'}).on(transitionEnd, function() {
-					cake.off(transitionEnd).removeClass('transition').css({'right': 0 + '%'});
+				var style = {
+					'z-index': 0,
+					'transform': 'translate(-' + (windowWidth + cakeSize) + 'px, 0px)'
+				};
+
+				cake.css(style).on(transitionEnd, function() {
+					cake.off(transitionEnd).removeClass('transition').css({'right': -cakeSize, 'transform': 'translate(0px) scale(1)', 'opacity': 1});
 
 					setTimeout(function() {
 						releaseCake();
